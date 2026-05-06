@@ -69,16 +69,26 @@ export function Footer() {
           <div>
             <h3 className="font-semibold text-foreground mb-4">Navigation</h3>
             <ul className="space-y-2">
-              {navItems.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
+              {navItems
+                .filter((item) => item.href !== '/contact')
+                .map((item) => (
+                  <li key={item.href}>
+                    <Link
+                      href={item.href}
+                      className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
+              <li>
+                <Link
+                  href="/support"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Support
+                </Link>
+              </li>
             </ul>
           </div>
 
