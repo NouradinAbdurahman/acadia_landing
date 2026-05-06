@@ -40,13 +40,15 @@ export function Footer() {
                 className="cursor-pointer border-0 bg-transparent p-0 transition-opacity hover:opacity-90 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0"
                 aria-label="App Store coming soon"
               >
-                <Image
-                  src="/app-store-logo.png"
-                  alt="Download on the App Store"
-                  width={180}
-                  height={54}
-                  className="h-auto w-auto max-w-[180px]"
-                />
+                <span className="relative block aspect-[180/54] w-full max-w-[180px]">
+                  <Image
+                    src="/app-store-logo.png"
+                    alt="Download on the App Store"
+                    fill
+                    sizes="180px"
+                    className="object-contain object-left"
+                  />
+                </span>
               </button>
               <button
                 type="button"
@@ -54,13 +56,15 @@ export function Footer() {
                 className="cursor-pointer border-0 bg-transparent p-0 transition-opacity hover:opacity-90 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0"
                 aria-label="Google Play coming soon"
               >
-                <Image
-                  src="/google-play-logo.png"
-                  alt="Get it on Google Play"
-                  width={180}
-                  height={54}
-                  className="h-auto w-auto max-w-[180px]"
-                />
+                <span className="relative block aspect-[180/54] w-full max-w-[180px]">
+                  <Image
+                    src="/google-play-logo.png"
+                    alt="Get it on Google Play"
+                    fill
+                    sizes="180px"
+                    className="object-contain object-left"
+                  />
+                </span>
               </button>
             </div>
           </div>

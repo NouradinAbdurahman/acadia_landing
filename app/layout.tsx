@@ -52,7 +52,12 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${roboto.variable} ${geistMono.variable} dark`}>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      data-scroll-behavior="smooth"
+      className={`${roboto.variable} ${geistMono.variable} dark`}
+    >
       <body suppressHydrationWarning className="font-sans antialiased bg-background min-h-screen">
         <ThemeProvider>
           <div className="relative flex min-h-screen flex-col">
