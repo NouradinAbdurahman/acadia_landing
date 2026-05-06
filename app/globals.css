@@ -1,0 +1,176 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Acadia Light Theme */
+  --background: #F8FAFC;
+  --foreground: #0F172A;
+  --card: #FFFFFF;
+  --card-foreground: #0F172A;
+  --popover: #FFFFFF;
+  --popover-foreground: #0F172A;
+  --primary: #3B82F6;
+  --primary-foreground: #FFFFFF;
+  --secondary: #6366F1;
+  --secondary-foreground: #FFFFFF;
+  --muted: #F1F5F9;
+  --muted-foreground: #64748B;
+  --accent: #EFF6FF;
+  --accent-foreground: #3B82F6;
+  --destructive: #EF4444;
+  --destructive-foreground: #FFFFFF;
+  --success: #22C55E;
+  --success-foreground: #FFFFFF;
+  --border: #E2E8F0;
+  --input: #E2E8F0;
+  --ring: #3B82F6;
+  
+  /* Acadia Mood Colors */
+  --mood-awful: #E53935;
+  --mood-bad: #FF7043;
+  --mood-neutral: #FFC107;
+  --mood-good: #66BB6A;
+  --mood-great: #22C55E;
+  
+  /* Accent Colors */
+  --stress-accent: #EA580C;
+  --energy-accent: #0D9488;
+  
+  /* Chart Colors */
+  --chart-1: #3B82F6;
+  --chart-2: #6366F1;
+  --chart-3: #22C55E;
+  --chart-4: #EA580C;
+  --chart-5: #0D9488;
+  
+  --radius: 0.75rem;
+  
+  /* Surface Colors */
+  --surface: #FFFFFF;
+  --surface-elevated: #FFFFFF;
+  
+  /* Text Colors */
+  --text-primary: #0F172A;
+  --text-secondary: #64748B;
+  --text-tertiary: #94A3B8;
+}
+
+.dark {
+  /* Acadia Dark Theme */
+  --background: #0F172A;
+  --foreground: #F1F5F9;
+  --card: #1E293B;
+  --card-foreground: #F1F5F9;
+  --popover: #1E293B;
+  --popover-foreground: #F1F5F9;
+  --primary: #60A5FA;
+  --primary-foreground: #0F172A;
+  --secondary: #818CF8;
+  --secondary-foreground: #0F172A;
+  --muted: #1E293B;
+  --muted-foreground: #94A3B8;
+  --accent: #1E293B;
+  --accent-foreground: #60A5FA;
+  --destructive: #F87171;
+  --destructive-foreground: #0F172A;
+  --success: #4ADE80;
+  --success-foreground: #0F172A;
+  --border: #334155;
+  --input: #334155;
+  --ring: #60A5FA;
+  
+  /* Surface Colors */
+  --surface: #1E293B;
+  --surface-elevated: #334155;
+  
+  /* Text Colors */
+  --text-primary: #F1F5F9;
+  --text-secondary: #CBD5E1;
+  --text-tertiary: #94A3B8;
+}
+
+@theme inline {
+  --font-sans: 'Roboto', 'Roboto Fallback', system-ui, sans-serif;
+  --font-mono: 'Geist Mono', 'Geist Mono Fallback', monospace;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Glassmorphism utilities */
+@layer utilities {
+  .glass {
+    @apply bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl border border-slate-200/50 dark:border-slate-700/50;
+  }
+  
+  .glass-card {
+    @apply bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-slate-200/50 dark:border-slate-700/50 rounded-2xl;
+  }
+  
+  .gradient-primary {
+    background: linear-gradient(135deg, #3B82F6 0%, #6366F1 100%);
+  }
+  
+  .gradient-bg-light {
+    background: linear-gradient(180deg, #F8FAFC 0%, #EFF6FF 100%);
+  }
+  
+  .gradient-bg-dark {
+    background: linear-gradient(180deg, #0F172A 0%, #020617 100%);
+  }
+  
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary;
+  }
+  
+  .glow {
+    box-shadow: 0 0 40px rgba(59, 130, 246, 0.3);
+  }
+  
+  .glow-sm {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+  }
+}
