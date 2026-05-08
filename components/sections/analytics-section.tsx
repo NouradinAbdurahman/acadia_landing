@@ -1,155 +1,200 @@
 'use client'
 
-import { motion } from 'framer-motion'
-import { TrendingUp, BarChart3, LineChart, PieChart } from 'lucide-react'
+import { TrendingUp, Clock, CheckCircle2, Flame, BarChart2, Activity } from 'lucide-react'
+import { Area, AreaChart, Bar, BarChart, CartesianGrid, XAxis } from 'recharts'
 import { SectionHeader } from '@/components/shared/section-header'
-import { GlassCard } from '@/components/shared/glass-card'
-import { FadeIn } from '@/components/animations/motion'
+import { BlurFade } from '@/components/magicui/blur-fade'
+import { NumberTicker } from '@/components/magicui/number-ticker'
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  type ChartConfig,
+} from '@/components/ui/chart'
+import { cn } from '@/lib/utils'
+
+const performanceData = [
+  { month: 'Sep', score: 71 },
+  { month: 'Oct', score: 75 },
+  { month: 'Nov', score: 73 },
+  { month: 'Dec', score: 80 },
+  { month: 'Jan', score: 79 },
+  { month: 'Feb', score: 85 },
+  { month: 'Mar', score: 89 },
+  { month: 'Apr', score: 93 },
+]
+
+const weeklyData = [
+  { day: 'Mon', hours: 3.5 },
+  { day: 'Tue', hours: 2.0 },
+  { day: 'Wed', hours: 5.0 },
+  { day: 'Thu', hours: 1.5 },
+  { day: 'Fri', hours: 4.0 },
+  { day: 'Sat', hours: 6.5 },
+  { day: 'Sun', hours: 3.0 },
+]
+
+const areaConfig: ChartConfig = {
+  score: { label: 'Performance Score', color: '#3B82F6' },
+}
+
+const barConfig: ChartConfig = {
+  hours: { label: 'Study Hours', color: '#6366F1' },
+}
 
 const metrics = [
-  { label: 'Current GPA', value: '3.72', change: '+0.15', positive: true },
-  { label: 'Study Hours', value: '142', change: '+12%', positive: true },
-  { label: 'Tasks Completed', value: '87%', change: '+5%', positive: true },
-  { label: 'Burnout Score', value: 'Low', change: '-20%', positive: true },
+  { label: 'GPA', value: 3.72, decimals: 2, unit: '', change: '+0.15', accent: 'text-blue-400' },
+  { label: 'Study Hrs', value: 142, decimals: 0, unit: 'h', change: '+12%', accent: 'text-violet-400' },
+  { label: 'Tasks Done', value: 87, decimals: 0, unit: '%', change: '+5%', accent: 'text-green-400' },
+  { label: 'Burnout Risk', value: 18, decimals: 0, unit: '%', change: '−20%', accent: 'text-orange-400' },
 ]
-const monthlyPerformance = [52, 61, 58, 72, 68, 78, 84, 80, 88, 93, 89, 95]
+
+const insights = [
+  {
+    Icon: TrendingUp,
+    title: 'GPA Tracking',
+    desc: 'Semester-over-semester trends and outcome predictions.',
+    bg: 'bg-blue-500/10',
+    color: 'text-blue-500',
+  },
+  {
+    Icon: BarChart2,
+    title: 'Workload Trends',
+    desc: 'Spot course overload and stress peaks before they hit.',
+    bg: 'bg-violet-500/10',
+    color: 'text-violet-500',
+  },
+  {
+    Icon: Activity,
+    title: 'Study Consistency',
+    desc: 'Habit scores and streaks to build lasting routines.',
+    bg: 'bg-green-500/10',
+    color: 'text-green-500',
+  },
+]
 
 export function AnalyticsSection() {
   return (
-    <section className="py-24 relative">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-24 relative overflow-hidden">
+      {/* Ambient glow */}
+      <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-primary/[0.04] rounded-full blur-[100px]" />
+
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
         <SectionHeader
           title="Understand your academic performance"
           description="Comprehensive analytics help you identify patterns, track progress, and make data-driven decisions about your studies."
         />
 
-        <div className="mt-16 grid lg:grid-cols-2 gap-8">
-          {/* Analytics Dashboard Preview */}
-          <FadeIn>
-            <GlassCard className="p-6" glow>
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="font-semibold text-foreground">Performance Overview</h3>
-                <span className="text-xs text-muted-foreground">This Semester</span>
+        <div className="mt-16 grid lg:grid-cols-5 gap-5">
+          {/* Hero chart card */}
+          <BlurFade delay={0.1} inView className="lg:col-span-3">
+            <div className="h-full rounded-2xl border border-border/60 bg-card overflow-hidden flex flex-col">
+              {/* Header */}
+              <div className="px-6 pt-6 pb-2 flex items-start justify-between">
+                <div>
+                  <p className="text-sm font-semibold text-foreground">Semester Performance</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">Academic year progress</p>
+                </div>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-green-500/10 px-2.5 py-1 text-xs font-semibold text-green-500">
+                  <TrendingUp className="h-3 w-3" />
+                  +31% overall
+                </span>
               </div>
 
-              {/* Metrics Grid */}
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                {metrics.map((metric, index) => (
-                  <motion.div
-                    key={metric.label}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.1 }}
-                    className="bg-slate-100 dark:bg-slate-700 rounded-xl p-4"
+              {/* Area chart */}
+              <div className="px-2 flex-1">
+                <ChartContainer config={areaConfig} className="aspect-auto h-52 w-full">
+                  <AreaChart data={performanceData} margin={{ left: 8, right: 8, top: 8, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id="perfGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.35} />
+                        <stop offset="95%" stopColor="#3B82F6" stopOpacity={0.03} />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid vertical={false} />
+                    <XAxis dataKey="month" tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
+                    <ChartTooltip content={<ChartTooltipContent />} />
+                    <Area
+                      type="monotone"
+                      dataKey="score"
+                      stroke="#3B82F6"
+                      strokeWidth={2.5}
+                      fill="url(#perfGrad)"
+                      dot={false}
+                      activeDot={{ r: 5, fill: '#3B82F6', stroke: '#fff', strokeWidth: 2 }}
+                    />
+                  </AreaChart>
+                </ChartContainer>
+              </div>
+
+              {/* Metrics footer */}
+              <div className="grid grid-cols-4 border-t border-border/40 mt-1">
+                {metrics.map((m, i) => (
+                  <div
+                    key={m.label}
+                    className={cn('px-4 py-4', i < 3 && 'border-r border-border/40')}
                   >
-                    <p className="text-xs text-muted-foreground mb-1">{metric.label}</p>
-                    <div className="flex items-end gap-2">
-                      <span className="text-2xl font-bold text-foreground">{metric.value}</span>
-                      <span className={`text-xs ${metric.positive ? 'text-green-500' : 'text-red-500'}`}>
-                        {metric.change}
-                      </span>
-                    </div>
-                  </motion.div>
+                    <p className="text-[10px] text-muted-foreground truncate mb-0.5">{m.label}</p>
+                    <p className={cn('text-lg font-bold tabular-nums', m.accent)}>
+                      <NumberTicker
+                        value={m.value}
+                        decimalPlaces={m.decimals}
+                        className={cn('font-bold', m.accent)}
+                      />
+                      {m.unit}
+                    </p>
+                    <p className="text-[10px] text-green-500 font-medium mt-0.5">{m.change}</p>
+                  </div>
                 ))}
               </div>
+            </div>
+          </BlurFade>
 
-              <div className="h-56 rounded-xl border border-border/70 bg-slate-100/70 dark:bg-slate-700/40 p-4">
-                <div className="relative h-full">
-                  <div className="pointer-events-none absolute inset-0">
-                    {[0, 1, 2, 3].map((line) => (
+          {/* Right column */}
+          <div className="lg:col-span-2 flex flex-col gap-5">
+            {/* Weekly bar chart */}
+            <BlurFade delay={0.2} inView>
+              <div className="rounded-2xl border border-border/60 bg-card p-5">
+                <div className="flex items-center justify-between mb-1">
+                  <p className="text-sm font-semibold text-foreground">Weekly Study Hours</p>
+                  <span className="text-xs text-muted-foreground">25.5h this week</span>
+                </div>
+                <p className="text-xs text-muted-foreground mb-4">Daily distribution</p>
+                <ChartContainer config={barConfig} className="aspect-auto h-[130px] w-full">
+                  <BarChart data={weeklyData} margin={{ left: -12, right: 4, top: 4, bottom: 0 }}>
+                    <CartesianGrid vertical={false} />
+                    <XAxis dataKey="day" tick={{ fontSize: 10 }} axisLine={false} tickLine={false} />
+                    <ChartTooltip content={<ChartTooltipContent />} />
+                    <Bar dataKey="hours" fill="#6366F1" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ChartContainer>
+              </div>
+            </BlurFade>
+
+            {/* Insights */}
+            <BlurFade delay={0.3} inView className="flex-1">
+              <div className="rounded-2xl border border-border/60 bg-card p-5 h-full">
+                <p className="text-sm font-semibold text-foreground mb-5">Analytics Features</p>
+                <div className="space-y-5">
+                  {insights.map((item) => (
+                    <div key={item.title} className="flex items-start gap-3 group">
                       <div
-                        key={line}
-                        className="absolute left-0 right-0 border-t border-border/60"
-                        style={{ top: `${line * 33.33}%` }}
-                      />
-                    ))}
-                  </div>
-                  <div className="absolute inset-x-0 bottom-6 top-2 flex items-end justify-between gap-1.5">
-                    {monthlyPerformance.map((value, i) => (
-                      <motion.div
-                        key={i}
-                        initial={{ height: 0, opacity: 0.5 }}
-                        whileInView={{ height: `${value}%`, opacity: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: i * 0.04, duration: 0.45 }}
-                        className="group relative flex-1 rounded-t-md bg-gradient-to-t from-primary to-secondary/70"
-                      />
-                    ))}
-                  </div>
-                  <div className="absolute bottom-0 left-0 right-0 flex justify-between text-[10px] text-muted-foreground">
-                    <span>Jan</span><span>Mar</span><span>May</span><span>Jul</span><span>Sep</span><span>Nov</span>
-                  </div>
+                        className={cn(
+                          'mt-0.5 w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform duration-200 group-hover:scale-110',
+                          item.bg
+                        )}
+                      >
+                        <item.Icon className={cn('h-4 w-4', item.color)} />
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-foreground leading-tight">{item.title}</p>
+                        <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">{item.desc}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-            </GlassCard>
-          </FadeIn>
-
-          {/* Features List */}
-          <div className="space-y-4">
-            <FadeIn delay={0.1}>
-              <GlassCard className="p-6">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <TrendingUp className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-foreground mb-2">GPA Analytics</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Track your GPA over time, compare semester performance, and predict future outcomes based on current progress.
-                    </p>
-                  </div>
-                </div>
-              </GlassCard>
-            </FadeIn>
-
-            <FadeIn delay={0.2}>
-              <GlassCard className="p-6">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center flex-shrink-0">
-                    <BarChart3 className="h-6 w-6 text-secondary" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-foreground mb-2">Workload Trends</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Visualize your workload distribution across courses and identify peak stress periods before they happen.
-                    </p>
-                  </div>
-                </div>
-              </GlassCard>
-            </FadeIn>
-
-            <FadeIn delay={0.3}>
-              <GlassCard className="p-6">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-green-500/10 flex items-center justify-center flex-shrink-0">
-                    <LineChart className="h-6 w-6 text-green-500" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-foreground mb-2">Study Consistency</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Monitor your study habits with detailed session tracking and consistency scores to build better routines.
-                    </p>
-                  </div>
-                </div>
-              </GlassCard>
-            </FadeIn>
-
-            <FadeIn delay={0.4}>
-              <GlassCard className="p-6">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-orange-500/10 flex items-center justify-center flex-shrink-0">
-                    <PieChart className="h-6 w-6 text-orange-500" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-foreground mb-2">Semester Comparison</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Compare your performance across semesters to identify growth areas and celebrate your progress.
-                    </p>
-                  </div>
-                </div>
-              </GlassCard>
-            </FadeIn>
+            </BlurFade>
           </div>
         </div>
       </div>

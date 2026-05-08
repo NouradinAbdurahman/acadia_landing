@@ -174,3 +174,27 @@
     box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
   }
 }
+
+/* Magic UI keyframe animations */
+@keyframes shimmer-slide {
+  to {
+    transform: translate(calc(100cqw - 100%), 0);
+  }
+}
+
+@keyframes spin-around {
+  0% { transform: translateZ(0) rotate(0); }
+  15%, 35% { transform: translateZ(0) rotate(90deg); }
+  65%, 85% { transform: translateZ(0) rotate(270deg); }
+  100% { transform: translateZ(0) rotate(360deg); }
+}
+
+@keyframes gradient {
+  to { background-position: var(--bg-size, 300%) 0; }
+}
+
+@theme inline {
+  --animate-shimmer-slide: shimmer-slide 1s linear infinite;
+  --animate-spin-around: spin-around calc(var(--speed, 3s) * 0.75) infinite linear;
+  --animate-gradient: gradient 8s linear infinite;
+}

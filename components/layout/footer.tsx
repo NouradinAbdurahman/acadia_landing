@@ -4,12 +4,12 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Github, Linkedin, Twitter, Mail } from 'lucide-react'
 import { toast } from 'sonner'
-import { navItems, socialLinks } from '@/lib/constants/theme'
+import { navItems } from '@/lib/constants/theme'
 import { Separator } from '@/components/ui/separator'
 
 export function Footer() {
-  function handleStoreClick(store: 'App Store' | 'Google Play') {
-    toast.info(`${store} version is not published yet.`)
+  function handleStoreClick() {
+    toast.info('Google Play version is not published yet.')
   }
 
   return (
@@ -30,15 +30,16 @@ export function Footer() {
               <span className="font-semibold text-xl text-foreground">Acadia</span>
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Academic Performance &amp; Stress Monitoring for Modern Students. 
+              Academic Performance &amp; Stress Monitoring for Modern Students.
               Built with AI to help you achieve your academic goals.
             </p>
             <div className="mt-5 flex flex-col gap-3">
-              <button
-                type="button"
-                onClick={() => handleStoreClick('App Store')}
-                className="cursor-pointer border-0 bg-transparent p-0 transition-opacity hover:opacity-90 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0"
-                aria-label="App Store coming soon"
+              <a
+                href="https://apps.apple.com/tr/app/acadia-study-planner/id6761367583"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition-opacity hover:opacity-90"
+                aria-label="Download on the App Store"
               >
                 <span className="relative block aspect-[180/54] w-full max-w-[180px]">
                   <Image
@@ -49,10 +50,10 @@ export function Footer() {
                     className="object-contain object-left"
                   />
                 </span>
-              </button>
+              </a>
               <button
                 type="button"
-                onClick={() => handleStoreClick('Google Play')}
+                onClick={handleStoreClick}
                 className="cursor-pointer border-0 bg-transparent p-0 transition-opacity hover:opacity-90 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0"
                 aria-label="Google Play coming soon"
               >
@@ -123,40 +124,18 @@ export function Footer() {
           <div>
             <h3 className="font-semibold text-foreground mb-4">Connect</h3>
             <div className="flex items-center gap-4">
-              <a
-                href={socialLinks.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-                aria-label="GitHub"
-              >
+              <span className="text-muted-foreground" aria-label="GitHub">
                 <Github className="h-5 w-5" />
-              </a>
-              <a
-                href={socialLinks.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-                aria-label="LinkedIn"
-              >
+              </span>
+              <span className="text-muted-foreground" aria-label="LinkedIn">
                 <Linkedin className="h-5 w-5" />
-              </a>
-              <a
-                href={socialLinks.twitter}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-                aria-label="Twitter"
-              >
+              </span>
+              <span className="text-muted-foreground" aria-label="Twitter">
                 <Twitter className="h-5 w-5" />
-              </a>
-              <a
-                href="mailto:support@acadia.app"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-                aria-label="Email"
-              >
+              </span>
+              <span className="text-muted-foreground" aria-label="Email">
                 <Mail className="h-5 w-5" />
-              </a>
+              </span>
             </div>
           </div>
         </div>

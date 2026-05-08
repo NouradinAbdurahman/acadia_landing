@@ -2,314 +2,308 @@
 
 import * as React from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, ChevronLeft, ChevronRight } from 'lucide-react'
-import { SectionHeader } from '@/components/shared/section-header'
-import { GlassCard } from '@/components/shared/glass-card'
-import { FadeIn, StaggerContainer, StaggerItem } from '@/components/animations/motion'
-import { Button } from '@/components/ui/button'
+import { X, ChevronLeft, ChevronRight, ImageOff } from 'lucide-react'
+import { BlurFade } from '@/components/magicui/blur-fade'
+import { AnimatedGradientText } from '@/components/magicui/animated-gradient-text'
 import { cn } from '@/lib/utils'
 
-const categories = [
-  'All',
-  'Dashboard',
-  'Tasks',
-  'Analytics',
-  'AI',
-  'Wellbeing',
-  'Study Timer',
-  'Courses',
-  'Notification',
-  'Settings',
-]
+/* ─── data ──────────────────────────────────────────────────── */
+
+const categories = ['All','Dashboard','Tasks','Analytics','AI','Wellbeing','Study Timer','Courses','Notification','Settings']
 
 const screenshots = [
-  {
-    id: 1,
-    title: 'Main Dashboard',
-    category: 'Dashboard',
-    description: 'Overview of your academic performance and daily tasks',
-    image: '/screenshots/main-dashboard.png',
-  },
-  {
-    id: 2,
-    title: 'Task Management',
-    category: 'Tasks',
-    description: 'Organize and prioritize your assignments',
-    image: '/screenshots/task-management.png',
-  },
-  {
-    id: 3,
-    title: 'AI Chat Assistant',
-    category: 'AI',
-    description: 'Get instant answers about your studies',
-    image: '/screenshots/ai-chat-assistant.png',
-  },
-  {
-    id: 4,
-    title: 'Mood Tracking',
-    category: 'Wellbeing',
-    description: 'Monitor your emotional wellbeing',
-    image: '/screenshots/mood-tracking.png',
-  },
-  {
-    id: 5,
-    title: 'Study Timer',
-    category: 'Study Timer',
-    description: 'Focus with Pomodoro and deep work modes',
-    image: '/screenshots/study-timer.png',
-  },
-  {
-    id: 6,
-    title: 'Courses Overview',
-    category: 'Courses',
-    description: 'View all your courses and progress',
-    image: '/screenshots/course-overview.png',
-  },
-  {
-    id: 7,
-    title: 'Study Heatmap',
-    category: 'Dashboard',
-    description: 'Visualize your study consistency',
-    image: '/screenshots/study-heatmap.png',
-  },
-  {
-    id: 8,
-    title: 'Notification Center',
-    category: 'Notification',
-    description: 'Smart alerts and reminders',
-    image: '/screenshots/notifications.png',
-  },
-  {
-    id: 9,
-    title: 'Stress Levels',
-    category: 'Wellbeing',
-    description: 'Track and manage your stress',
-    image: '/screenshots/stress-levels.png',
-  },
-  {
-    id: 10,
-    title: 'AI Insights',
-    category: 'AI',
-    description: 'Personalized recommendations',
-    image: '/screenshots/ai-insights.png',
-  },
-  {
-    id: 11,
-    title: 'Profile Settings',
-    category: 'Settings',
-    description: 'Customize your experience',
-    image: '/screenshots/profile-settings.png',
-  },
-  {
-    id: 12,
-    title: 'Analytics Overview',
-    category: 'Analytics',
-    description:
-      'Track GPA, study hours, completion rates, and consistency with clear charts and insights.',
-    image: '/screenshots/analytics-overview.png',
-  },
-  {
-    id: 13,
-    title: 'Semester Dashboard Overview',
-    category: 'Dashboard',
-    description:
-      'Track your selected semester with upcoming exams, deadlines, academic risk score, and AI insights in one view.',
-    image: '/screenshots/semester-dashboard-overview.png',
-  },
+  { id: 1,  title: 'Main Dashboard',             category: 'Dashboard',    description: 'Overview of academic performance and daily tasks',                              image: '/screenshots/main-dashboard.png' },
+  { id: 2,  title: 'Task Management',            category: 'Tasks',        description: 'Organize and prioritize your assignments',                                       image: '/screenshots/task-management.png' },
+  { id: 3,  title: 'AI Chat Assistant',          category: 'AI',           description: 'Get instant answers about your studies',                                        image: '/screenshots/ai-chat-assistant.png' },
+  { id: 4,  title: 'Mood Tracking',              category: 'Wellbeing',    description: 'Monitor your emotional wellbeing',                                              image: '/screenshots/mood-tracking.png' },
+  { id: 5,  title: 'Study Timer',                category: 'Study Timer',  description: 'Pomodoro, Deep Work, Review, and Practice session modes',                       image: '/screenshots/study-timer.png' },
+  { id: 6,  title: 'Courses Overview',           category: 'Courses',      description: 'View all your courses and progress',                                            image: '/screenshots/course-overview.png' },
+  { id: 7,  title: 'Study Heatmap',              category: 'Dashboard',    description: 'Visualize your study consistency over time',                                    image: '/screenshots/study-heatmap.png' },
+  { id: 8,  title: 'Notification Center',        category: 'Notification', description: 'Smart alerts and reminders that matter',                                        image: '/screenshots/notifications.png' },
+  { id: 9,  title: 'Stress Levels',              category: 'Wellbeing',    description: 'Track and manage your stress patterns',                                         image: '/screenshots/stress-levels.png' },
+  { id: 10, title: 'AI Insights',                category: 'AI',           description: 'Personalised recommendations from your data',                                   image: '/screenshots/ai-insights.png' },
+  { id: 11, title: 'Profile Settings',           category: 'Settings',     description: 'Customise your experience',                                                     image: '/screenshots/profile-settings.png' },
+  { id: 12, title: 'Analytics Overview',         category: 'Analytics',    description: 'GPA, study hours, completion rates and consistency',                            image: '/screenshots/analytics-overview.png' },
+  { id: 13, title: 'Semester Dashboard',         category: 'Dashboard',    description: 'Upcoming exams and upcoming deadlines',                                       image: '/screenshots/semester-dashboard-overview.png' },
 ]
+
+/* ─── iPhone 17 Pro Max frame ───────────────────────────────── */
+
+function PhoneFrame({
+  src, alt, failed, onError, onClick, index = 0,
+}: {
+  src: string; alt: string; failed: boolean
+  onError: () => void; onClick?: () => void; index?: number
+}) {
+  return (
+    <motion.button
+      onClick={onClick}
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.05, duration: 0.4, ease: 'easeOut' }}
+      whileHover={{ y: -6, scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      className="group w-full text-left cursor-pointer outline-none"
+    >
+      {/* Exact same frame as hero section */}
+      <div className="relative bg-gradient-to-b from-slate-700 to-slate-900 dark:from-slate-600 dark:to-slate-800 rounded-[3rem] p-3 shadow-2xl transition-shadow duration-300 group-hover:shadow-primary/20">
+        {/* Notch */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-6 bg-slate-900 dark:bg-slate-800 rounded-b-2xl z-10" />
+        {/* Screen */}
+        <div className="bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-900 dark:to-slate-800 rounded-[2.5rem] overflow-hidden aspect-[9/19.5] relative">
+          {failed ? (
+            <div className="flex h-full w-full items-center justify-center flex-col gap-2 bg-muted">
+              <ImageOff className="h-6 w-6 text-muted-foreground/40" />
+              <span className="text-[10px] text-muted-foreground/40 font-mono text-center px-3 leading-tight">{alt}</span>
+            </div>
+          ) : (
+            <img src={src} alt={alt} className="h-full w-full object-cover" loading="lazy" onError={onError} />
+          )}
+          {/* Hover tint */}
+          <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/8 transition-colors duration-300" />
+        </div>
+      </div>
+    </motion.button>
+  )
+}
+
+/* ─── component ─────────────────────────────────────────────── */
 
 export function ScreenshotsContent() {
   const [activeCategory, setActiveCategory] = React.useState('All')
-  const [selectedScreenshot, setSelectedScreenshot] = React.useState<number | null>(null)
-  const [failedImages, setFailedImages] = React.useState<Record<number, boolean>>({})
+  const [selected, setSelected] = React.useState<number | null>(null)
+  const [failed, setFailed] = React.useState<Record<number, boolean>>({})
+  const tabsRef = React.useRef<HTMLDivElement>(null)
 
-  const filteredScreenshots = activeCategory === 'All'
+  const filtered = activeCategory === 'All'
     ? screenshots
-    : screenshots.filter(s => s.category === activeCategory)
+    : screenshots.filter((s) => s.category === activeCategory)
 
-  const currentIndex = selectedScreenshot !== null
-    ? filteredScreenshots.findIndex(s => s.id === selectedScreenshot)
-    : -1
+  const currentIdx = selected !== null ? filtered.findIndex((s) => s.id === selected) : -1
+  const selectedShot = selected !== null ? screenshots.find((s) => s.id === selected) : null
 
-  const goToPrevious = () => {
-    if (currentIndex > 0) {
-      setSelectedScreenshot(filteredScreenshots[currentIndex - 1].id)
-    }
-  }
+  function prev() { if (currentIdx > 0) setSelected(filtered[currentIdx - 1].id) }
+  function next() { if (currentIdx < filtered.length - 1) setSelected(filtered[currentIdx + 1].id) }
 
-  const goToNext = () => {
-    if (currentIndex < filteredScreenshots.length - 1) {
-      setSelectedScreenshot(filteredScreenshots[currentIndex + 1].id)
-    }
-  }
-
+  /* close lightbox if active item no longer in filter */
   React.useEffect(() => {
-    if (selectedScreenshot === null) return
+    if (selected !== null && !filtered.some((s) => s.id === selected)) setSelected(null)
+  }, [filtered, selected])
 
-    const existsInCurrentFilter = filteredScreenshots.some(
-      screenshot => screenshot.id === selectedScreenshot
-    )
+  /* keyboard nav in lightbox */
+  React.useEffect(() => {
+    if (selected === null) return
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'ArrowLeft')  prev()
+      if (e.key === 'ArrowRight') next()
+      if (e.key === 'Escape')     setSelected(null)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [selected, currentIdx, filtered])
 
-    if (!existsInCurrentFilter) setSelectedScreenshot(null)
-  }, [filteredScreenshots, selectedScreenshot])
+  /* keep active filter tab centred */
+  React.useEffect(() => {
+    const bar = tabsRef.current
+    const btn = bar?.querySelector<HTMLElement>(`[data-cat="${activeCategory}"]`)
+    if (!bar || !btn) return
+    bar.scrollTo({ left: btn.offsetLeft - bar.offsetWidth / 2 + btn.offsetWidth / 2, behavior: 'smooth' })
+  }, [activeCategory])
 
   return (
-    <div className="min-h-screen pt-28 pb-16">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <FadeIn>
-          <SectionHeader
-            title="See Acadia in action"
-            description="Browse through screenshots of the app to get a feel for the user experience."
-          />
-        </FadeIn>
+    <div className="min-h-screen pt-28 pb-24 relative overflow-hidden">
+      <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-primary/[0.04] rounded-full blur-[120px]" />
 
-        {/* Category Filters */}
-        <FadeIn delay={0.1}>
-          <div className="mt-12 flex flex-wrap items-center justify-center gap-2">
-            {categories.map((category) => (
-              <Button
-                key={category}
-                variant={activeCategory === category ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => {
-                  setActiveCategory(category)
-                  setSelectedScreenshot(null)
-                }}
-                className={cn(
-                  'cursor-pointer',
-                  activeCategory === category && 'gradient-primary text-white border-0'
-                )}
-              >
-                {category}
-              </Button>
-            ))}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
+
+        {/* ── Header ── */}
+        <BlurFade delay={0.05} inView>
+          <div className="text-center mb-12">
+            <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-foreground mb-4">
+              See Acadia{' '}
+              <AnimatedGradientText colorFrom="#60A5FA" colorTo="#818CF8" speed={0.8}>
+                in action
+              </AnimatedGradientText>
+            </h1>
+            <p className="text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
+              Browse every screen of the app — built for iOS and Android.
+            </p>
           </div>
-        </FadeIn>
+        </BlurFade>
 
-        {/* Screenshots Grid */}
-        <StaggerContainer
-          key={activeCategory}
-          className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-        >
-          {filteredScreenshots.map((screenshot) => (
-            <StaggerItem key={screenshot.id}>
-              <motion.button
-                onClick={() => setSelectedScreenshot(screenshot.id)}
-                className="w-full text-left group"
-                whileHover={{ y: -4 }}
-                transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-              >
-                <GlassCard className="overflow-hidden">
-                  <div className="relative aspect-[9/19.5] overflow-hidden bg-muted">
-                    {failedImages[screenshot.id] ? (
-                      <div className="flex h-full w-full items-center justify-center bg-muted text-xs text-muted-foreground">
-                        Add image: {screenshot.image}
-                      </div>
-                    ) : (
-                      <img
-                        src={screenshot.image}
-                        alt={screenshot.title}
-                        className="h-full w-full object-cover"
-                        loading="lazy"
-                        onError={() =>
-                          setFailedImages(prev => ({ ...prev, [screenshot.id]: true }))
-                        }
+        {/* ── Filter tabs ── */}
+        <BlurFade delay={0.1} inView>
+          <div className="relative mb-10">
+            <div className="absolute inset-0 bg-background/80 backdrop-blur-xl rounded-2xl border border-border/60 shadow-sm" />
+            <div
+              ref={tabsRef}
+              className="relative flex overflow-x-auto lg:flex-wrap lg:justify-center gap-1.5 p-1.5 lg:p-2"
+              style={{ scrollbarWidth: 'none' }}
+            >
+              {categories.map((cat) => {
+                const isActive = activeCategory === cat
+                const count = cat === 'All' ? screenshots.length : screenshots.filter((s) => s.category === cat).length
+                return (
+                  <button
+                    key={cat}
+                    data-cat={cat}
+                    onClick={() => setActiveCategory(cat)}
+                    className={cn(
+                      'relative flex items-center gap-1.5 px-3.5 py-2 lg:px-5 lg:py-2.5 rounded-xl text-xs lg:text-sm font-semibold whitespace-nowrap transition-colors duration-150 cursor-pointer flex-shrink-0',
+                      isActive ? 'text-white' : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
+                    )}
+                  >
+                    {isActive && (
+                      <motion.span
+                        layoutId="cat-pill"
+                        className="absolute inset-0 rounded-xl bg-gradient-to-r from-primary to-secondary"
+                        transition={{ type: 'spring', stiffness: 420, damping: 32 }}
                       />
                     )}
-                  </div>
-
-                  {/* Info */}
-                  <div className="p-4">
-                    <span className="text-xs text-primary font-medium">{screenshot.category}</span>
-                    <h3 className="font-semibold text-foreground mt-1">{screenshot.title}</h3>
-                    <p className="text-sm text-muted-foreground mt-1">{screenshot.description}</p>
-                  </div>
-                </GlassCard>
-              </motion.button>
-            </StaggerItem>
-          ))}
-        </StaggerContainer>
-        {filteredScreenshots.length === 0 && (
-          <div className="mt-12 rounded-xl border border-dashed border-border/70 p-8 text-center text-muted-foreground">
-            No screenshots in this category yet.
+                    <span className="relative">{cat}</span>
+                    <span className={cn(
+                      'relative rounded-full px-1.5 py-0.5 text-[9px] font-bold leading-none',
+                      isActive ? 'bg-white/20 text-white' : 'bg-muted text-muted-foreground'
+                    )}>{count}</span>
+                  </button>
+                )
+              })}
+            </div>
           </div>
-        )}
+        </BlurFade>
 
-        {/* Lightbox */}
+        {/* ── Grid ── */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeCategory}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            {filtered.length === 0 ? (
+              <div className="mt-8 rounded-2xl border border-dashed border-border/60 p-16 text-center text-muted-foreground text-sm">
+                No screenshots in this category yet.
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                {filtered.map((shot, i) => (
+                  <div key={shot.id} className="flex flex-col gap-3">
+                    <PhoneFrame
+                      src={shot.image}
+                      alt={shot.title}
+                      failed={!!failed[shot.id]}
+                      onError={() => setFailed((p) => ({ ...p, [shot.id]: true }))}
+                      onClick={() => setSelected(shot.id)}
+                      index={i}
+                    />
+                    <div className="px-1">
+                      <p className="text-[10px] font-semibold text-primary uppercase tracking-wide">{shot.category}</p>
+                      <p className="text-xs font-semibold text-foreground mt-0.5 leading-tight">{shot.title}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </motion.div>
+        </AnimatePresence>
+
+        {/* ── Lightbox ── */}
         <AnimatePresence>
-          {selectedScreenshot !== null && (
+          {selected !== null && selectedShot && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 bg-black/90 backdrop-blur-xl flex items-center justify-center p-4"
-              onClick={() => setSelectedScreenshot(null)}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4"
+              style={{ background: 'rgba(0,0,0,0.92)' }}
+              onClick={() => setSelected(null)}
             >
-              {/* Close button */}
+              {/* Backdrop blur */}
+              <div className="absolute inset-0 backdrop-blur-2xl" />
+
+              {/* Close */}
               <button
-                onClick={() => setSelectedScreenshot(null)}
-                className="absolute top-4 right-4 p-2 text-white/80 hover:text-white transition-colors"
-                aria-label="Close lightbox"
+                onClick={() => setSelected(null)}
+                className="absolute top-5 right-5 z-10 w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors cursor-pointer"
               >
-                <X className="h-8 w-8" />
+                <X className="h-4 w-4 text-white" />
               </button>
 
-              {/* Navigation */}
+              {/* Prev */}
               <button
-                onClick={(e) => { e.stopPropagation(); goToPrevious(); }}
-                disabled={currentIndex === 0}
-                className="absolute left-4 p-2 text-white/80 hover:text-white transition-colors disabled:opacity-30"
-                aria-label="Previous screenshot"
+                onClick={(e) => { e.stopPropagation(); prev() }}
+                disabled={currentIdx === 0}
+                className="absolute left-4 z-10 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors cursor-pointer disabled:opacity-20 disabled:cursor-not-allowed"
               >
-                <ChevronLeft className="h-8 w-8" />
+                <ChevronLeft className="h-5 w-5 text-white" />
               </button>
 
+              {/* Next */}
               <button
-                onClick={(e) => { e.stopPropagation(); goToNext(); }}
-                disabled={currentIndex === filteredScreenshots.length - 1}
-                className="absolute right-4 p-2 text-white/80 hover:text-white transition-colors disabled:opacity-30"
-                aria-label="Next screenshot"
+                onClick={(e) => { e.stopPropagation(); next() }}
+                disabled={currentIdx === filtered.length - 1}
+                className="absolute right-4 z-10 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors cursor-pointer disabled:opacity-20 disabled:cursor-not-allowed"
               >
-                <ChevronRight className="h-8 w-8" />
+                <ChevronRight className="h-5 w-5 text-white" />
               </button>
 
-              {/* Content */}
+              {/* Phone */}
               <motion.div
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
+                key={selected}
+                initial={{ scale: 0.88, opacity: 0, y: 16 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.88, opacity: 0, y: -8 }}
+                transition={{ type: 'spring', stiffness: 320, damping: 28 }}
                 onClick={(e) => e.stopPropagation()}
-                className="max-w-sm w-full"
+                className="relative z-10 w-[min(280px,55vw)]"
               >
-                {(() => {
-                  const screenshot = screenshots.find(s => s.id === selectedScreenshot)
-                  if (!screenshot) return null
-                  return (
-                    <>
-                      {/* Large screenshot */}
-                      <div className="aspect-[9/19.5] overflow-hidden rounded-3xl border border-white/20 bg-slate-900 shadow-2xl">
-                        <img
-                          src={screenshot.image}
-                          alt={screenshot.title}
-                          className="h-full w-full object-cover"
-                        />
+                {/* Same frame as hero section */}
+                <div className="relative bg-gradient-to-b from-slate-700 to-slate-900 dark:from-slate-600 dark:to-slate-800 rounded-[3rem] p-3 shadow-2xl">
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-6 bg-slate-900 dark:bg-slate-800 rounded-b-2xl z-10" />
+                  <div className="bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-900 dark:to-slate-800 rounded-[2.5rem] overflow-hidden aspect-[9/19.5]">
+                    {failed[selected] ? (
+                      <div className="flex h-full w-full items-center justify-center bg-muted">
+                        <ImageOff className="h-8 w-8 text-muted-foreground/40" />
                       </div>
-                      
-                      {/* Caption */}
-                      <div className="mt-6 text-center">
-                        <span className="text-primary text-sm font-medium">{screenshot.category}</span>
-                        <p className="text-white/60 text-sm mt-1">
-                          {currentIndex + 1} of {filteredScreenshots.length}
-                        </p>
-                      </div>
-                    </>
-                  )
-                })()}
+                    ) : (
+                      <img
+                        src={selectedShot.image}
+                        alt={selectedShot.title}
+                        className="h-full w-full object-cover"
+                      />
+                    )}
+                  </div>
+                </div>
+
+                {/* Caption */}
+                <div className="mt-5 text-center">
+                  <p className="text-xs font-semibold text-primary uppercase tracking-wider">{selectedShot.category}</p>
+                  <p className="text-white font-semibold mt-1">{selectedShot.title}</p>
+                  <p className="text-white/50 text-xs mt-1 leading-relaxed max-w-[220px] mx-auto">{selectedShot.description}</p>
+                  <p className="text-white/30 text-[11px] mt-3 tabular-nums">{currentIdx + 1} / {filtered.length}</p>
+                </div>
               </motion.div>
+
+              {/* Dot strip */}
+              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10">
+                {filtered.map((s, di) => (
+                  <button
+                    key={s.id}
+                    onClick={(e) => { e.stopPropagation(); setSelected(s.id) }}
+                    className={cn(
+                      'rounded-full transition-all duration-300 cursor-pointer',
+                      di === currentIdx ? 'w-5 h-1.5 bg-primary' : 'w-1.5 h-1.5 bg-white/20 hover:bg-white/40'
+                    )}
+                  />
+                ))}
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
+
       </div>
     </div>
   )
