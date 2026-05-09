@@ -84,18 +84,21 @@ export function StudyTimerSection() {
               {/* Mode tab bar */}
               <div className="flex gap-1 p-2.5 border-b border-border/60 bg-muted/30">
                 {modes.map((mode) => (
-                  <button
+                  <motion.button
                     key={mode.id}
                     onClick={() => setActive(mode)}
+                    whileHover={active.id !== mode.id ? { scale: 1.03 } : {}}
+                    whileTap={{ scale: 0.97 }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 20 }}
                     className={cn(
-                      'flex-1 rounded-lg py-2 text-xs font-semibold transition-all duration-200 cursor-pointer',
+                      'flex-1 rounded-lg py-2 text-xs font-semibold cursor-pointer transition-colors duration-200',
                       active.id === mode.id
                         ? 'bg-card text-foreground shadow-sm'
                         : 'text-muted-foreground hover:text-foreground'
                     )}
                   >
                     {mode.name}
-                  </button>
+                  </motion.button>
                 ))}
               </div>
 
@@ -164,22 +167,31 @@ export function StudyTimerSection() {
 
                 {/* Controls */}
                 <div className="flex items-center justify-center gap-3 mb-8">
-                  {[
-                    { Icon: RotateCcw, size: 'h-11 w-11' },
-                  ].map(({ Icon, size }, i) => (
-                    <button key={i} className={cn('flex items-center justify-center rounded-full border border-border/70 bg-muted/40 text-muted-foreground transition-all hover:border-primary/40 hover:bg-primary/5 hover:text-foreground cursor-pointer', size)}>
-                      <Icon className="h-4 w-4" />
-                    </button>
-                  ))}
-                  <button
-                    className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-primary to-secondary text-white shadow-lg shadow-primary/25 transition-transform duration-200 hover:scale-105 active:scale-95 cursor-pointer"
+                  <motion.button
+                    whileHover={{ scale: 1.12 }}
+                    whileTap={{ scale: 0.88 }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                    className="flex h-11 w-11 items-center justify-center rounded-full border border-border/70 bg-muted/40 text-muted-foreground cursor-pointer"
+                  >
+                    <RotateCcw className="h-4 w-4" />
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.07 }}
+                    whileTap={{ scale: 0.93 }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                    className="flex h-16 w-16 items-center justify-center rounded-full text-white shadow-lg shadow-primary/25 cursor-pointer"
                     style={{ background: `linear-gradient(135deg, ${active.gradStart}, ${active.gradEnd})` }}
                   >
                     <Pause className="h-6 w-6" />
-                  </button>
-                  <button className="flex h-11 w-11 items-center justify-center rounded-full border border-border/70 bg-muted/40 text-muted-foreground transition-all hover:border-primary/40 hover:bg-primary/5 hover:text-foreground cursor-pointer">
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.12 }}
+                    whileTap={{ scale: 0.88 }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                    className="flex h-11 w-11 items-center justify-center rounded-full border border-border/70 bg-muted/40 text-muted-foreground cursor-pointer"
+                  >
                     <SkipForward className="h-4 w-4" />
-                  </button>
+                  </motion.button>
                 </div>
 
                 {/* Session info */}
@@ -226,20 +238,29 @@ export function StudyTimerSection() {
             <div className="mt-8 space-y-3">
               {modes.map((mode, index) => (
                 <BlurFade key={mode.id} delay={0.2 + index * 0.08} inView>
-                  <button
+                  <motion.button
                     onClick={() => setActive(mode)}
+                    initial="rest"
+                    whileHover="hover"
+                    whileTap={{ scale: 0.99 }}
+                    transition={{ type: 'spring', stiffness: 350, damping: 25 }}
+                    variants={{ rest: { y: 0 }, hover: { y: -2 } }}
                     className={cn(
-                      'w-full text-left rounded-2xl border p-5 transition-all duration-200 cursor-pointer group',
+                      'w-full text-left rounded-2xl border p-5 cursor-pointer',
                       active.id === mode.id
                         ? 'border-primary/40 bg-primary/5 shadow-sm shadow-primary/5'
-                        : 'border-border/60 bg-card hover:border-primary/20 hover:bg-card'
+                        : 'border-border/60 bg-card'
                     )}
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex items-center gap-3">
-                        <div className={cn('w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform duration-200 group-hover:scale-110', mode.bg)}>
+                        <motion.div
+                          variants={{ rest: { scale: 1 }, hover: { scale: 1.1 } }}
+                          transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                          className={cn('w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0', mode.bg)}
+                        >
                           <mode.Icon className={cn('h-5 w-5', mode.color)} />
-                        </div>
+                        </motion.div>
                         <div>
                           <div className="flex items-center gap-2 mb-0.5">
                             <span className="text-sm font-semibold text-foreground">{mode.name}</span>
@@ -281,7 +302,7 @@ export function StudyTimerSection() {
                         {mode.sessions} sessions · {mode.breakDuration} breaks
                       </span>
                     </div>
-                  </button>
+                  </motion.button>
                 </BlurFade>
               ))}
             </div>

@@ -1,5 +1,6 @@
 'use client'
 
+import { motion } from 'framer-motion'
 import { TrendingUp, Clock, CheckCircle2, Flame, BarChart2, Activity } from 'lucide-react'
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, XAxis } from 'recharts'
 import { SectionHeader } from '@/components/shared/section-header'
@@ -177,20 +178,24 @@ export function AnalyticsSection() {
                 <p className="text-sm font-semibold text-foreground mb-5">Analytics Features</p>
                 <div className="space-y-5">
                   {insights.map((item) => (
-                    <div key={item.title} className="flex items-start gap-3 group">
-                      <div
-                        className={cn(
-                          'mt-0.5 w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform duration-200 group-hover:scale-110',
-                          item.bg
-                        )}
+                    <motion.div
+                      key={item.title}
+                      initial="rest"
+                      whileHover="hover"
+                      className="flex items-start gap-3"
+                    >
+                      <motion.div
+                        variants={{ rest: { scale: 1 }, hover: { scale: 1.1 } }}
+                        transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                        className={cn('mt-0.5 w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0', item.bg)}
                       >
                         <item.Icon className={cn('h-4 w-4', item.color)} />
-                      </div>
+                      </motion.div>
                       <div>
                         <p className="text-sm font-semibold text-foreground leading-tight">{item.title}</p>
                         <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">{item.desc}</p>
                       </div>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               </div>

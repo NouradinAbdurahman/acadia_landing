@@ -96,13 +96,23 @@ export function AIAssistantSection() {
             <div className="mt-8 grid sm:grid-cols-2 gap-3">
               {capabilities.map((cap, i) => (
                 <BlurFade key={cap.title} delay={0.15 + i * 0.08} inView>
-                  <div className="group rounded-2xl border border-border/60 bg-card p-4 hover:border-primary/25 hover:shadow-sm transition-all duration-200">
-                    <div className={cn('w-9 h-9 rounded-xl flex items-center justify-center mb-3 transition-transform duration-200 group-hover:scale-110', cap.bg)}>
+                  <motion.div
+                    initial="rest"
+                    whileHover="hover"
+                    transition={{ type: 'spring', stiffness: 350, damping: 25 }}
+                    variants={{ rest: { y: 0 }, hover: { y: -4 } }}
+                    className="rounded-2xl border border-border/60 bg-card p-4"
+                  >
+                    <motion.div
+                      variants={{ rest: { scale: 1 }, hover: { scale: 1.1 } }}
+                      transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                      className={cn('w-9 h-9 rounded-xl flex items-center justify-center mb-3', cap.bg)}
+                    >
                       <cap.Icon className={cn('h-4 w-4', cap.color)} />
-                    </div>
+                    </motion.div>
                     <p className="text-sm font-semibold text-foreground mb-1">{cap.title}</p>
                     <p className="text-xs text-muted-foreground leading-relaxed">{cap.description}</p>
-                  </div>
+                  </motion.div>
                 </BlurFade>
               ))}
             </div>
@@ -247,9 +257,11 @@ export function AIAssistantSection() {
                     key={s}
                     initial={{ opacity: 0, y: 6 }}
                     whileInView={{ opacity: 1, y: 0 }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.96 }}
                     viewport={{ once: true }}
                     transition={{ delay: 1.7 + i * 0.08 }}
-                    className="flex-shrink-0 rounded-full border border-border/60 bg-muted/40 px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors cursor-pointer"
+                    className="flex-shrink-0 rounded-full border border-border/60 bg-muted/40 px-3 py-1.5 text-xs font-medium text-muted-foreground cursor-pointer"
                   >
                     {s}
                   </motion.button>
@@ -261,9 +273,14 @@ export function AIAssistantSection() {
                 <div className="flex-1 rounded-full border border-border/60 bg-muted/40 px-4 py-2.5 text-sm text-muted-foreground select-none">
                   Ask anything...
                 </div>
-                <button className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-sm shadow-primary/25 hover:scale-105 active:scale-95 transition-transform cursor-pointer flex-shrink-0">
+                <motion.button
+                  whileHover={{ scale: 1.08 }}
+                  whileTap={{ scale: 0.92 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                  className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-sm shadow-primary/25 cursor-pointer flex-shrink-0"
+                >
                   <Send className="h-4 w-4 text-white" />
-                </button>
+                </motion.button>
               </div>
             </div>
           </BlurFade>

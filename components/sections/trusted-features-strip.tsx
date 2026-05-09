@@ -10,6 +10,7 @@ import {
   BookOpen,
   Calendar,
 } from 'lucide-react'
+import { motion } from 'framer-motion'
 import { BlurFade } from '@/components/magicui/blur-fade'
 import { NumberTicker } from '@/components/magicui/number-ticker'
 
@@ -61,10 +62,15 @@ export function TrustedFeaturesStrip() {
           <div className="flex flex-wrap items-center justify-center gap-3">
             {features.map((feature, index) => (
               <BlurFade key={feature.label} delay={0.3 + index * 0.05} inView>
-                <div className="flex items-center gap-2 rounded-full border border-border/60 bg-muted/40 px-4 py-2 text-sm font-medium text-muted-foreground hover:border-primary/40 hover:bg-primary/5 hover:text-foreground transition-all duration-200 cursor-default">
+                <motion.div
+                  whileHover={{ scale: 1.06, y: -2 }}
+                  whileTap={{ scale: 0.97 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                  className="flex items-center gap-2 rounded-full border border-border/60 bg-muted/40 px-4 py-2 text-sm font-medium text-muted-foreground cursor-default"
+                >
                   <feature.icon className="h-4 w-4 text-primary flex-shrink-0" />
                   {feature.label}
-                </div>
+                </motion.div>
               </BlurFade>
             ))}
           </div>

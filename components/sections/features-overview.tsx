@@ -12,6 +12,7 @@ import {
   LineChart,
   Calendar,
 } from 'lucide-react'
+import { motion } from 'framer-motion'
 import { SectionHeader } from '@/components/shared/section-header'
 import { BlurFade } from '@/components/magicui/blur-fade'
 import { cn } from '@/lib/utils'
@@ -101,27 +102,28 @@ export function FeaturesOverview() {
         <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
           {features.map((feature, index) => (
             <BlurFade key={feature.title} delay={0.05 * index} inView>
-              <div
-                className={cn(
-                  'group relative overflow-hidden rounded-2xl p-6 h-full',
-                  'bg-card border border-border/60',
-                  'hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5',
-                  'transition-all duration-300 cursor-default'
-                )}
+              <motion.div
+                initial="rest"
+                whileHover="hover"
+                transition={{ type: 'spring', stiffness: 350, damping: 25 }}
+                variants={{ rest: { y: 0 }, hover: { y: -6 } }}
+                className="relative overflow-hidden rounded-2xl p-6 h-full bg-card border border-border/60 cursor-default"
               >
-                {/* Gradient glow on hover */}
-                <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-br from-primary/3 via-transparent to-secondary/3" />
-
+                <motion.div
+                  variants={{ rest: { opacity: 0 }, hover: { opacity: 1 } }}
+                  transition={{ duration: 0.25 }}
+                  className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/3 via-transparent to-secondary/3"
+                />
                 <div className={cn('w-11 h-11 rounded-xl flex items-center justify-center mb-4', feature.bg)}>
                   <feature.icon className={cn('h-5 w-5', feature.color)} />
                 </div>
-                <h3 className="text-base font-semibold text-foreground mb-2 group-hover:text-primary transition-colors duration-200">
+                <h3 className="text-base font-semibold text-foreground mb-2">
                   {feature.title}
                 </h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   {feature.description}
                 </p>
-              </div>
+              </motion.div>
             </BlurFade>
           ))}
         </div>

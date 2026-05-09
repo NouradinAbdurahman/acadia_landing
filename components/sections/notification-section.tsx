@@ -145,11 +145,21 @@ export function NotificationSection() {
             <div className="mt-10 grid sm:grid-cols-2 gap-4">
               {features.map((f, i) => (
                 <BlurFade key={f.title} delay={0.15 + i * 0.08} inView>
-                  <div className="group rounded-2xl border border-border/60 bg-card p-5 hover:border-primary/25 hover:shadow-sm transition-all duration-200">
+                  <motion.div
+                    initial="rest"
+                    whileHover="hover"
+                    transition={{ type: 'spring', stiffness: 350, damping: 25 }}
+                    variants={{ rest: { y: 0 }, hover: { y: -4 } }}
+                    className="rounded-2xl border border-border/60 bg-card p-5"
+                  >
                     <div className="flex items-start justify-between mb-4">
-                      <div className={cn('w-10 h-10 rounded-xl flex items-center justify-center transition-transform duration-200 group-hover:scale-110', f.bg)}>
+                      <motion.div
+                        variants={{ rest: { scale: 1 }, hover: { scale: 1.1 } }}
+                        transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                        className={cn('w-10 h-10 rounded-xl flex items-center justify-center', f.bg)}
+                      >
                         <f.Icon className={cn('h-5 w-5', f.color)} />
-                      </div>
+                      </motion.div>
                       {/* Stat pill */}
                       <div className="text-right">
                         <p className={cn('text-xl font-bold tabular-nums leading-none', f.color)}>
@@ -161,7 +171,7 @@ export function NotificationSection() {
                     </div>
                     <h4 className="text-sm font-semibold text-foreground mb-1">{f.title}</h4>
                     <p className="text-xs text-muted-foreground leading-relaxed">{f.description}</p>
-                  </div>
+                  </motion.div>
                 </BlurFade>
               ))}
             </div>
@@ -223,23 +233,29 @@ export function NotificationSection() {
                     </span>
                   </div>
 
-                  <button
+                  <motion.button
                     onClick={() => setDismissed(new Set(notifications.map((n) => n.id)))}
+                    whileHover={{ scale: 1.04 }}
+                    whileTap={{ scale: 0.96 }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 20 }}
                     className="flex items-center gap-1.5 text-[11px] font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
                   >
                     <CheckCheck className="h-3.5 w-3.5" />
                     Mark all read
-                  </button>
+                  </motion.button>
                 </div>
 
                 {/* Filter chips */}
                 <div className="flex items-center gap-1.5">
                   {filters.map((f) => (
-                    <button
+                    <motion.button
                       key={f.id}
                       onClick={() => setFilter(f.id)}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      transition={{ type: 'spring', stiffness: 400, damping: 20 }}
                       className={cn(
-                        'flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold transition-all duration-200 cursor-pointer',
+                        'flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold cursor-pointer',
                         filter === f.id
                           ? 'bg-primary text-primary-foreground shadow-sm shadow-primary/20'
                           : 'bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground'
@@ -252,7 +268,7 @@ export function NotificationSection() {
                       )}>
                         {f.count}
                       </span>
-                    </button>
+                    </motion.button>
                   ))}
                 </div>
               </div>
