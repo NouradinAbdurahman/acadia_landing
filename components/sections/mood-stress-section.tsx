@@ -104,7 +104,13 @@ function MetricBar({
 }
 
 export function MoodStressSection() {
-  const [selected, setSelected] = React.useState(moods[3]) // Good by default
+  const [activeIndex, setActiveIndex] = React.useState(2) // Neutral — middle emoji by default
+  const selected = moods[activeIndex]
+
+  function handlePanEnd(_: PointerEvent, info: { offset: { x: number } }) {
+    if (info.offset.x < -40) setActiveIndex(i => Math.min(moods.length - 1, i + 1))
+    else if (info.offset.x > 40) setActiveIndex(i => Math.max(0, i - 1))
+  }
 
   return (
     <section className="py-24 relative overflow-hidden">
@@ -142,64 +148,77 @@ export function MoodStressSection() {
                 />
 
                 <div className="relative p-6">
-                  <div className="flex items-center justify-between mb-5">
+                  <div className="flex items-center justify-between mb-4">
                     <p className="text-sm font-semibold text-foreground">How are you feeling today?</p>
-                    <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">Tap to select</span>
+                    <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">Swipe to select</span>
                   </div>
 
-                  {/* Mood selector row */}
-                  <div className="grid grid-cols-5 gap-2 mb-6">
-                    {moods.map((mood) => {
-                      const isActive = selected.label === mood.label
-                      return (
-                        <motion.button
-                          key={mood.label}
-                          onClick={() => setSelected(mood)}
-                          whileHover={{ y: -3 }}
-                          whileTap={{ scale: 0.9 }}
-                          className={cn(
-                            'relative flex flex-col items-center gap-1.5 rounded-xl border py-3 px-1 transition-colors duration-300 cursor-pointer',
-                            isActive ? 'bg-current/10' : 'border-border/60 bg-card hover:bg-muted/40'
-                          )}
-                          style={isActive ? { borderColor: `${mood.color}60`, color: mood.color } : undefined}
-                        >
-                          {/* Active ring */}
-                          <AnimatePresence>
-                            {isActive && (
-                              <motion.span
-                                key="ring"
-                                initial={{ opacity: 0, scale: 0.6 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0.6 }}
-                                className="pointer-events-none absolute inset-0 rounded-xl"
-                                style={{ boxShadow: `inset 0 0 0 1.5px ${mood.color}50` }}
-                              />
-                            )}
-                          </AnimatePresence>
+                  {/* ── Coverflow Carousel ── */}
+                  <div className="relative mb-1">
+                    {/* Swipe zone — catches pan gestures without blocking child clicks */}
+                    <motion.div
+                      className="relative h-28 flex items-center justify-center overflow-hidden cursor-grab active:cursor-grabbing select-none"
+                      onPanEnd={handlePanEnd as any}
+                    >
+                      {/* Glow — radial gradient pinned to center, fades to transparent at edges */}
+                      <motion.div
+                        className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24"
+                        animate={{ background: `radial-gradient(circle, ${selected.color}90 0%, ${selected.color}30 45%, transparent 72%)` }}
+                        transition={{ duration: 0.35 }}
+                      />
 
-                          <motion.span
-                            animate={{ scale: isActive ? 1.35 : 1 }}
-                            transition={{ type: 'spring', stiffness: 320, damping: 18 }}
-                            className="text-2xl leading-none"
+                      {/* Emoji items */}
+                      {moods.map((mood, i) => {
+                        const distance = i - activeIndex
+                        const absD = Math.abs(distance)
+                        return (
+                          <motion.button
+                            key={mood.label}
+                            onClick={() => setActiveIndex(i)}
+                            className="absolute flex flex-col items-center gap-1 cursor-pointer focus:outline-none"
+                            animate={{
+                              x: distance * 78,
+                              scale: absD === 0 ? 1.45 : absD === 1 ? 0.68 : 0.48,
+                              opacity: absD === 0 ? 1 : absD === 1 ? 0.55 : 0.22,
+                            }}
+                            transition={{ type: 'spring', stiffness: 300, damping: 28 }}
+                            style={{ zIndex: 10 - absD }}
                           >
-                            {mood.emoji}
-                          </motion.span>
-                          <span className={cn(
-                            'text-[10px] font-semibold leading-tight',
-                            isActive ? '' : 'text-muted-foreground'
-                          )}>
-                            {mood.label}
-                          </span>
-                        </motion.button>
-                      )
-                    })}
+                            <span className="text-5xl leading-none">{mood.emoji}</span>
+                          </motion.button>
+                        )
+                      })}
+                    </motion.div>
+
+                    {/* Active indicator bar */}
+                    <div className="flex justify-center mt-1 mb-3">
+                      <motion.div
+                        className="h-1 rounded-full"
+                        animate={{ width: 28, backgroundColor: selected.color }}
+                        transition={{ duration: 0.3 }}
+                      />
+                    </div>
+
+                    {/* "I'm feeling…" label */}
+                    <AnimatePresence mode="wait">
+                      <motion.p
+                        key={selected.label}
+                        initial={{ opacity: 0, y: 5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -5 }}
+                        transition={{ duration: 0.18 }}
+                        className="text-center text-sm font-semibold mb-5"
+                        style={{ color: selected.color }}
+                      >
+                        I&apos;m feeling {selected.label}
+                      </motion.p>
+                    </AnimatePresence>
                   </div>
 
                   {/* Animated metric bars */}
                   <div className="space-y-3 mb-5">
                     <MetricBar label="Stress Level" value={selected.stress} color="#F97316" />
                     <MetricBar label="Energy Level" value={selected.energy} color="#14B8A6" />
-                    <MetricBar label="Focus Score"  value={selected.focus}  color="#3B82F6" />
                   </div>
 
                   {/* Dynamic insight */}
